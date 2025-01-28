@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": "Bolso",
+    "description": "Zapatos ligeros, disponibles en varios colores",
+    "code": "ZD12346",
+    "price": 99.99,
+    "stock": 120,
+    "category": "Deportes",
+    "thumbnails": [
+      "https://example.com/ropa1.jpg",
+      "https://example.com/ropa2.jpg"
+    ],
+    "status": true
+  }
+]
