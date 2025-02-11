@@ -41,7 +41,7 @@ export default class ProductManager {
         };
         this.products.push(newProduct);
         this.saveProductToFile();
-        return newProduct.id;
+        return newProduct;
     }
 
     async updateProduct(id, product) {

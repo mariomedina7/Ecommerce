@@ -4,6 +4,7 @@ import ProductManager from "../../service/ProductManager.js";
 const router = new Router();
 const productManager = new ProductManager();
 
+export default (io) => {
 router.get('/', async (req, res) => {
     
     try {
@@ -43,8 +44,11 @@ router.post('/', async (req, res) => {
         }
 
         const product = { title, description, code, price, stock, category, thumbnails };
-        const newProductId = await productManager.addProduct(product);
-        res.status(201).json({id: newProductId, status: 'Success', message: 'Producto creado correctamente'});
+        const newProduct = await productManager.addProduct(product);
+
+        io.emit('productoCreado', newProduct);
+
+        res.status(201).json({id: newProduct.id, status: 'Success', message: 'Producto creado correctamente'});
     } catch (error) {
         console.log(error);
     }
@@ -74,12 +78,14 @@ router.delete('/:pid', async (req, res) => {
     try {
         const { pid } = req.params;
         const productId = parseInt(pid);
-        
+            
         const deletedProduct = await productManager.deleteProduct(productId);
-
+    
         if (!deletedProduct) {
             return res.status(404).send({ status: 'Error', error: `Producto con id ${productId} no encontrado` });
         } else {
+            io.emit('productoEliminado', productId);
+
             return res.status(200).json({status: 'Success', id: productId, message: 'Producto eliminado correctamente'});
         }
     } catch (error) {
@@ -88,4 +94,5 @@ router.delete('/:pid', async (req, res) => {
 
 });
 
-export default router;
+    return router;
+}

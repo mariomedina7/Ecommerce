@@ -1,8 +1,10 @@
-import e, { Router } from "express";
+import { Router } from "express";
 import CartManager from "../../service/CartManager.js";
+import ProductManager from "../../service/ProductManager.js";
 
 const router = new Router();
 const cartManager = new CartManager();
+const productManager = new ProductManager();
 
 router.get('/:cid', async (req, res) => {
 
@@ -27,12 +29,8 @@ router.post('/', async (req, res) => {
     
     try {
         const { products } = req.body;
-
-        if (!products) {
-          return res.status(400).send({status: 'Error', error: 'Debe proporcionar un array de productos'});
-        }
-
         const cart = { products };
+
         const newCartId = await cartManager.addCart(cart);
         res.status(201).json({id: newCartId, status: 'Success', message: 'Carrito creado correctamente'});
     } catch (error) {
@@ -50,6 +48,11 @@ router.post('/:cid/product/:pid', async (req, res) => {
 
         if (isNaN(cartId) || isNaN(productId)) {
             return res.status(400).send({ status: 'Error', error: 'El ID del carrito y del producto deben ser números válidos.' });
+        }
+
+        const productExists = await productManager.getProductById(productId);
+        if (!productExists) {
+            return res.status(404).send({ status: 'Error', error: `Producto con id ${productId} no encontrado` });
         }
 
         const updatedCart = await cartManager.addProductToCart(cartId, productId);

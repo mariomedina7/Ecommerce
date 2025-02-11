@@ -1,7 +1,18 @@
 [
   {
     "id": 1,
-    "title": "Bolso",
+    "title": "ASDF",
+    "description": "ASF",
+    "code": "ASF",
+    "price": "232",
+    "stock": "23",
+    "category": "DSFG",
+    "thumbnails": "SDF",
+    "status": true
+  },
+  {
+    "id": 2,
+    "title": "Ropa",
     "description": "Zapatos ligeros, disponibles en varios colores",
     "code": "ZD12346",
     "price": 99.99,
@@ -11,6 +22,17 @@
       "https://example.com/ropa1.jpg",
       "https://example.com/ropa2.jpg"
     ],
+    "status": true
+  },
+  {
+    "id": 3,
+    "title": "asf",
+    "description": "asf",
+    "code": "asf",
+    "price": "234",
+    "stock": "234",
+    "category": "sdfg",
+    "thumbnails": "sdf",
     "status": true
   }
 ]

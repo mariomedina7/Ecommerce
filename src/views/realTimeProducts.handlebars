@@ -1,0 +1,26 @@
+<h1>Lista de productos</h1>
+    <form id="formAgregarProducto">
+        <input type="text" id="title" placeholder="Título" required />
+        <input type="text" id="description" placeholder="Descripción" required />
+        <input type="text" id="code" placeholder="Código" required />
+        <input type="decimal" id="price" placeholder="Precio" required />
+        <input type="number" id="stock" placeholder="Stock" required />
+        <input type="text" id="category" placeholder="Categoría" required />
+        <input type="text" id="thumbnails" placeholder="URL Imagen" required />
+        <button type="submit">Agregar Producto</button>
+    </form>
+    {{#if realTimeProducts.length}}
+        <ul>
+            {{#each realTimeProducts}}
+                <li id="producto-{{this.id}}">
+                    {{this.title}} - ${{this.price}} - Stock: {{this.stock}}
+                    <button onclick="eliminarProducto({{this.id}})">Eliminar</button>
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>No hay productos disponibles.</p>
+    {{/if}}
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>
