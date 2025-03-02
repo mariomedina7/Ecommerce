@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+import { productModel } from '../src/models/product.model.js';
+
 const pathProducts = path.resolve('db', 'products.json');
 
 export default class ProductManager {
@@ -22,54 +24,43 @@ export default class ProductManager {
         fs.writeFile(pathProducts, JSON.stringify(this.products, null, 2));
     }
 
-    async getAllProducts(limit) {
-        if (limit) {
-            return this.products.slice(0, limit);
+    async getAllProducts(page, limit, sort, category, stock) {
+        let filter = {};
+
+        if (category) {
+            filter.category = category;
         }
-        return this.products;
+        
+        if (stock) {
+            let stockValue = parseInt(stock);
+            if (!isNaN(stockValue)) {
+                filter.stock = { $gte: stockValue };
+            }
+        }
+    
+        let sortOptions = sort === 'asc' ? { price: 1 } : { price: -1 };
+    
+        let products = await productModel.paginate(filter, { limit, page, lean: true, sort: sortOptions });
+    
+        return products;
     }
 
     async getProductById(id) {
-        return this.products.find(product => product.id === id);
+        return await productModel.findById(id)
     }
 
     async addProduct(product) {
-        const newProduct = { 
-            id: this.products.length ? this.products[this.products.length - 1].id + 1 : 1, 
-            ...product,
-            status: true
-        };
-        this.products.push(newProduct);
-        this.saveProductToFile();
+        let newProduct = await productModel.create(product);
         return newProduct;
     }
 
     async updateProduct(id, product) {
-        const index = this.products.findIndex(product => product.id === id);
-        if (index === -1) {
-            return null;
-        }
-
-        const updatedProduct = { 
-            ...this.products[index], 
-            ...product, 
-            id: this.products[index].id 
-        };
-
-        this.products[index] = updatedProduct;
-        this.saveProductToFile();
-        return updatedProduct;
+        let updatedProduct = await productModel.updateOne({ _id: id }, product);
+        return updatedProduct
     }
 
     async deleteProduct(id) {
-        const index = this.products.findIndex(product => product.id === id);
-        if (index === -1) {
-            return null;
-        }
-        this.products[index].status = false;
-        const deletedProduct = this.products[index];
-        this.products.splice(index, 1);
-        this.saveProductToFile();
+        let deletedProduct = await productModel.deleteOne({ _id: id });
         return deletedProduct;
     }
 }

@@ -1,5 +1,6 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
+import mongoose from 'mongoose';
 import __dirname from './utils.js';
 import { Server } from 'socket.io';
 import productRouter from './routes/products.routes.js';
@@ -37,3 +38,16 @@ io.on('connection', (socket) => {
 
     socket.emit('mensajeServidor', 'Servidor conectado');
 });
+
+//Mongoose
+const connectMongoDB = async () => {
+    try {
+        await mongoose.connect('mongodb://localhost:27017/ecommerce_backend?retryWrites=true&w=majority');
+        console.log('Conectado a la base de datos');
+    } catch (error) {
+        console.error("Error al conectar a la base de datos:", error);
+        process.exit();
+    }
+}
+
+connectMongoDB();
