@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
 //Mongoose
 const connectMongoDB = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/ecommerce_backend?retryWrites=true&w=majority');
+        await mongoose.connect('mongodb+srv://mariormedinar7:6oIyf0TSrydiMeFK@clustersandbox.xbwdj.mongodb.net/ecommerce?retryWrites=true&w=majority');
         console.log('Conectado a la base de datos');
     } catch (error) {
         console.error("Error al conectar a la base de datos:", error);
